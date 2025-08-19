@@ -17,9 +17,6 @@ class PokerGame:
         lowest_card = min(numerical_hand)
         is_straight = (numerical_hand == [2,3,4,5,14]) or ([val-lowest_card for val in numerical_hand] == [0,1,2,3,4])
 
-        if is_flush and is_straight:
-            return [9] # straight flush
-        
         counts_dict = {}
         for val in numerical_hand:
             if val in counts:
@@ -30,6 +27,9 @@ class PokerGame:
         counts = [i[0] for i in counts_pairs]
         vals = [i[1] for i in counts_pairs]
 
+        if is_flush and is_straight:
+            return [9,vals] # straight flush
+
         if counts == [4,1]:
             return [8,vals] # quad
 
@@ -37,10 +37,10 @@ class PokerGame:
             return [7,vals] # full house
 
         if is_flush:
-            return [6] # flush
+            return [6,vals] # flush
         
         if is_straight:
-            return [5] # straight
+            return [5,vals] # straight
 
         if counts == [3,1,1]:
             return [4,vals]
