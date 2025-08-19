@@ -1,3 +1,5 @@
+from itertools import combinations
+
 deck = [(i,j) for i in range(2,15) for j in ["H","D","C","S"]]
 
 class PokerGame:
@@ -48,3 +50,18 @@ class PokerGame:
             return [2,vals]
 
         return [1,vals]
+
+    def best_rank(cards):
+        best_rank = [0]
+        for hand in combinations(cards,5):
+            lhand = list(hand)
+            rank = PokerGame.hand_rank(lhand)
+            if rank > best_rank:
+                best_rank = rank
+
+    def determine_winner(shared,private):
+        hand_ranks = []
+        for p in private:
+            hand_ranks.append( PokerGame.best_rank(shared+p) )
+        best_rank = max(hand_ranks)
+        return [i for i in range(len(hand_ranks)) if hand_ranks[i]==best_rank]
