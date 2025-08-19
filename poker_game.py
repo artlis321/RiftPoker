@@ -5,7 +5,7 @@ deck = [(i,j) for i in range(2,15) for j in ["H","D","C","S"]]
 class PokerGame:
     def __init__(self,player_classes,starting_pot):
         self.num_players = len(player_classes)
-        self.players = [p(self.num_players) for p in player_classes]
+        self.players = [player_classes[i](self.num_players,i) for i in range(self.num_players)]
         self.banks = [starting_pot for i in range(self.num_players)]
 
     def hand_rank(hand):
@@ -68,13 +68,36 @@ class PokerGame:
         best_rank = max(hand_ranks)
         return [i for i in range(len(hand_ranks)) if hand_ranks[i]==best_rank]
 
+    def run_hand(self,dealer_index):
+        """
+        update_dict = {
+            cur_phase : ["Preflop","Flop","Turn","River","Reveal"],
+            your_position : [0(small blind),...,num_players-1(dealer)],
+            your_hand : [(val,suit),(val,suit)],
+            all_hands: [[(val,suit),(val,suit)],...] # this value is None unless in Reveal
+            public_hand : [(val,suit),...],
+            pots : [(###,[players with access to full pot]),(###,[players with access to this sidepot]),...]
+            required_bid : ###,
+            cur_bids : [###,###,###,###],
+            your_bank : ###,
+            all_bank : [###,###,###,###]
+        }
+        """
+
 # to be extended by players
 class PokerBot:
-    def __init__(self,num_players):
+    def __init__(self,num_players,my_index):
         self.num_players = num_players
+        self.my_index = my_index
 
     def receive_game_update(self):
         return
 
     def next_play(self):
+        """
+        return ["Fold"]
+        return ["Check"] # automatically folds if cannot check
+        return ["Call"] # automatically raises to required_bid
+        return ["Raise",###] # raises below required_bid automatically raise to it, raises above your_bank automatically go all in
+        """
         return ["Fold"]
