@@ -3,8 +3,10 @@ from itertools import combinations
 deck = [(i,j) for i in range(2,15) for j in ["H","D","C","S"]]
 
 class PokerGame:
-    def __init__(player_list):
-        self.player_list = []
+    def __init__(self,player_classes,starting_pot):
+        self.num_players = len(player_classes)
+        self.players = [p(self.num_players) for p in player_classes]
+        self.banks = [starting_pot for i in range(self.num_players)]
 
     def hand_rank(hand):
         is_flush = all([card[i][1] == hand[0][1] for card in hand])
@@ -65,3 +67,14 @@ class PokerGame:
             hand_ranks.append( PokerGame.best_rank(shared+p) )
         best_rank = max(hand_ranks)
         return [i for i in range(len(hand_ranks)) if hand_ranks[i]==best_rank]
+
+# to be extended by players
+class PokerBot:
+    def __init__(self,num_players):
+        self.num_players = num_players
+
+    def receive_game_update(self):
+        return
+
+    def next_play(self):
+        return ["Fold"]
